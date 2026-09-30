@@ -1,0 +1,560 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mi Economía v2">
+<title>Mi Economía</title>
+<style>
+:root{--bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--secondary:#8e8e93;--blue:#007aff;--green:#34c759;--red:#ff3b30;--line:#e5e5ea}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);-webkit-text-size-adjust:100%}
+body{color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}button{-webkit-tap-highlight-color:transparent}
+.app{max-width:720px;margin:auto;padding-bottom:calc(108px + env(safe-area-inset-bottom))}
+.head,header{position:sticky;top:0;z-index:20;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;background:rgba(242,242,247,.88);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
+h1{margin:0;font-size:34px;line-height:1.08;letter-spacing:-.8px;font-weight:750}
+.screen{display:none;padding:8px 14px}.screen.on{display:block}
+.card{background:#fff;border:0;border-radius:21px;padding:18px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.035),0 6px 22px rgba(0,0,0,.035)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.title{margin:19px 3px 10px;font-size:20px;font-weight:750}.label,.muted{color:var(--secondary);font-size:13px}
+.big{margin-top:5px;font-size:27px;font-weight:760;letter-spacing:-.6px}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
+input,select{width:100%;min-height:47px;padding:10px 13px;border:1px solid #d1d1d6;border-radius:13px;background:#fff;color:var(--text);outline:0}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,122,255,.12)}
+form{display:grid;gap:10px}form button,.primary{min-height:48px;border:0;border-radius:14px;background:var(--blue);color:#fff;font-weight:700;padding:0 18px}
+.month{display:flex;align-items:center;gap:8px;margin:3px 0 12px}.month button{width:42px;height:42px;border:0;border-radius:13px;background:#fff;color:var(--blue);font-size:23px}.month select{min-height:42px;text-align:center;font-weight:650}
+.bar{height:8px;background:#e5e5ea;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue);border-radius:99px}
+canvas{max-width:100%;border-radius:16px}hr{border:0;border-top:1px solid var(--line)}
+.nav{position:fixed;z-index:100;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(690px,calc(100% - 14px));min-height:72px;padding:6px 4px;display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:rgba(255,255,255,.84);border:1px solid rgba(0,0,0,.06);border-radius:24px;box-shadow:0 10px 35px rgba(0,0,0,.15);-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px)}
+.nav button{min-width:0;border:0;border-radius:17px;background:transparent;color:#6e6e73;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:600}
+.nav button b{font-size:21px;line-height:21px;font-weight:500}.nav button.on{color:var(--blue);background:rgba(0,122,255,.09)}.nav button:active{transform:scale(.95)}
+@media(max-width:430px){h1{font-size:32px}.screen{padding-left:12px;padding-right:12px}.card{padding:16px;border-radius:19px}.big{font-size:25px}.nav button b{font-size:19px}}
+.ios-hint{text-align:center;color:var(--secondary);font-size:12px;padding:6px 18px 16px}
+</style></head><body><div class="app">
+<div class="head"><h1>Mi Economía</h1><div class="muted">Septiembre 2026</div></div>
+
+<section id="inicio" class="screen on"><div class="grid">
+<div class="card"><div class="label">Ingresos</div><div class="big green">3.450 €</div></div>
+<div class="card"><div class="label">Gastos</div><div class="big red">2.186 €</div></div>
+<div class="card"><div class="label">Disponible para otros gastos</div><div class="big blue">1.264 €</div></div>
+<div class="card"><div class="label">Disponible para otros gastos</div><div class="big green">36,6%</div></div></div>
+<div class="title">Presupuesto mensual</div><div class="card"><div class="row"><span>Utilizado</span><b>2.480 / 2.700 €</b></div><div class="bar"><i style="width:92%"></i></div></div>
+<div class="title">Próximos gastos</div><div class="card">
+<div class="row"><span>🏠 IBI</span><b>780 € · octubre</b></div><div class="row"><span>💼 IRPF</span><b>450 € · octubre</b></div><div class="row"><span>🚗 Seguro coche</span><b>650 € · febrero</b></div></div>
+<div class="notice">💡 Gastos no mensuales previstos próximos 3 meses: <b>1.230 €</b></div></section>
+
+<section id="mov" class="screen"><div class="title">Añadir movimiento</div><div class="card"><div class="form">
+<input id="d" placeholder="Concepto"><div class="two"><input id="a" type="number" placeholder="Importe €"><select id="t"><option>Gasto</option><option>Ingreso</option></select></div>
+<select id="c"></select><button class="btn" onclick="add()">Añadir</button></div></div>
+<div class="title">Categorías</div><div class="card" id="categoryManager"></div>
+<div class="title">Movimientos</div><div class="card"><table><thead><tr><th>Concepto</th><th>Categoría</th><th>€</th></tr></thead><tbody id="mt"></tbody></table></div></section>
+
+<section id="ing" class="screen"><div class="title">Ingresos</div>
+<div class="card"><div class="form">
+<div class="two"><input id="idc" placeholder="Concepto"><input id="ia" type="number" placeholder="Importe €"></div>
+<div class="two"><select id="ip"><option>Mensual</option><option>Trimestral</option><option>Semestral</option><option>Anual</option><option>Único</option></select><input id="if" type="month" value="2026-09"></div>
+<button class="btn" onclick="addI()">Añadir ingreso</button></div></div>
+<div class="title">Ingresos configurados</div><div class="card"><table><thead><tr><th>Concepto</th><th>Periodicidad</th><th>Importe</th><th></th></tr></thead><tbody id="it"></tbody></table></div>
+<div class="notice">Puedes tener varios ingresos: nómina, pensión, alquileres, trabajos extra, etc. La aplicación podrá calcular automáticamente el total mensual.</div>
+</section><section id="rec" class="screen"><div class="title">Gastos recurrentes</div><div class="card"><div class="form">
+<div class="two"><input id="rd" placeholder="Concepto"><input id="ra" type="number" placeholder="Importe €"></div>
+<div class="two"><select id="rp"><option>Mensual</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select><input id="rm" type="month" value="2026-10"></div>
+<button class="btn" onclick="addR()">Añadir gasto recurrente</button></div></div>
+<div class="card"><table><thead><tr><th>Gasto</th><th>Periodicidad</th><th>Importe</th></tr></thead><tbody id="rt"></tbody></table></div></section>
+
+<section id="pres" class="screen"><div class="title">Presupuesto de septiembre</div><div class="card"><div class="row"><span>Total</span><b id="homeBudget">2.700 €</div></div><div class="row"><span>Gastado</span><b>2.186 €</b></div><div class="bar"><i style="width:81%"></i></div></div>
+<div class="title">Por categorías</div><div class="card" id="bt"></div></section>
+
+<section id="graf" class="screen"><div class="title">Evolución del disponible para otros gastos</div><div class="card"><canvas id="chart" width="700" height="300"></canvas></div>
+<div class="title">Gastos por categoría</div><div class="card"><div class="row"><span>🏠 Casa</span><b>850 €</b></div><div class="row"><span>🚗 Coche</span><b>420 €</b></div><div class="row"><span>🛒 Alimentación</span><b>326 €</b></div><div class="row"><span>🎾 Ocio/Deporte</span><b>210 €</b></div><div class="row"><span>💼 Impuestos</span><b>180 €</b></div></div></section>
+
+<nav class="nav">
+<button class="on" onclick="go('inicio',this)"><b>⌂</b>Inicio</button>
+<button onclick="go('mov',this)"><b>↕</b>Movimientos</button>
+<button onclick="go('ing',this)"><b>＋</b>Ingresos</button>
+<button onclick="go('rec',this)"><b>↻</b>Recurrentes</button>
+<button onclick="go('pres',this)"><b>◒</b>Presupuesto</button>
+<button onclick="go('graf',this)"><b>▥</b>Gráficos</button>
+</nav></div>
+<script>
+let m=JSON.parse(localStorage.getItem('m')||'null')||[['Supermercado','Alimentación',86.4],['Gasolina','Coche',55],['Pádel','Deporte',35],['Internet','Casa',45],['Electricidad','Casa',82],['Restaurante','Ocio',62]];
+let categories=JSON.parse(localStorage.getItem('categories')||'null')||['Casa','Alimentación','Coche','Ocio','Deporte','Impuestos','Otros'];
+let inc=JSON.parse(localStorage.getItem('inc')||'null')||[['Nómina',3450,'Mensual','2026-09']];
+let r=JSON.parse(localStorage.getItem('r')||'null')||[['Seguro coche',650,'Anual','2027-02'],['Seguro hogar',320,'Anual','2027-06'],['IRPF',450,'Trimestral','2026-10'],['IBI',780,'Anual','2026-10'],['Internet',45,'Mensual','Todos']];
+function save(){localStorage.setItem('m',JSON.stringify(m));localStorage.setItem('r',JSON.stringify(r));localStorage.setItem('inc',JSON.stringify(inc));localStorage.setItem('categories',JSON.stringify(categories))}
+
+function monthKey(d=new Date()){
+  return d.toISOString().slice(0,7);
+}
+function money(n){
+  return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(Number(n)||0);
+}
+function monthlyIncomeTotal(){
+  const month = monthKey();
+  return (inc||[]).reduce((sum,x)=>{
+    const amount=Number(x[1])||0, freq=x[2], start=x[3]||'';
+    if(freq==='Mensual') return sum+amount;
+    if(freq==='Trimestral'){
+      if(!start || start==='Todos') return sum+amount;
+      const sm=Number(start.slice(5,7)), cm=Number(month.slice(5,7));
+      return ((cm-sm+12)%3===0) ? sum+amount : sum;
+    }
+    if(freq==='Semestral'){
+      if(!start || start==='Todos') return sum+amount;
+      const sm=Number(start.slice(5,7)), cm=Number(month.slice(5,7));
+      return ((cm-sm+12)%6===0) ? sum+amount : sum;
+    }
+    if(freq==='Anual'){
+      if(!start || start==='Todos') return sum+amount;
+      return start.slice(5,7)===month.slice(5,7) ? sum+amount : sum;
+    }
+    if(freq==='Una vez'){
+      return start===month ? sum+amount : sum;
+    }
+    return sum;
+  },0);
+}
+function monthlyRecurringExpenseTotal(){
+  const month = monthKey();
+  return (r||[]).reduce((sum,x)=>{
+    const amount=Number(x[1])||0, freq=x[2], start=x[3]||'';
+    if(freq==='Mensual') return sum+amount;
+    if(freq==='Trimestral'){
+      if(!start || start==='Todos') return sum+amount;
+      const sm=Number(start.slice(5,7)), cm=Number(month.slice(5,7));
+      return ((cm-sm+12)%3===0) ? sum+amount : sum;
+    }
+    if(freq==='Semestral'){
+      if(!start || start==='Todos') return sum+amount;
+      const sm=Number(start.slice(5,7)), cm=Number(month.slice(5,7));
+      return ((cm-sm+12)%6===0) ? sum+amount : sum;
+    }
+    if(freq==='Anual'){
+      if(!start || start==='Todos') return sum+amount;
+      return start.slice(5,7)===month.slice(5,7) ? sum+amount : sum;
+    }
+    return sum;
+  },0);
+}
+function monthlyMovementExpenseTotal(){
+  const month = monthKey();
+  return (m||[]).reduce((sum,x)=>{
+    // Expected movement format: [concept, category, amount, date?]
+    const amount=Number(x[2])||0;
+    const date=x[3];
+    if(!date || date.slice(0,7)===month) return sum+amount;
+    return sum;
+  },0);
+}
+function updateHomeTotals(){
+  const income=monthlyIncomeTotal();
+  const movementExpenses=monthlyMovementExpenseTotal();
+  const recurringExpenses=monthlyRecurringExpenseTotal();
+  const expenses=movementExpenses+recurringExpenses;
+  const available=income-expenses;
+  const freePercent=income>0 ? (available/income)*100 : 0;
+
+  const a=document.getElementById('homeIncome');
+  const b=document.getElementById('homeExpense');
+  const c=document.getElementById('homeAvailable');
+  const d=document.getElementById('homeFreePercent');
+  if(a) a.textContent=money(income);
+  if(b) b.textContent=money(expenses);
+  if(c) c.textContent=money(available);
+  if(d) d.textContent=freePercent.toLocaleString('es-ES',{maximumFractionDigits:1})+'%';
+
+  const budgetEl=document.getElementById('homeBudget');
+  if(budgetEl && typeof budgets!=='undefined'){
+    const totalBudget=Object.values(budgets||{}).reduce((s,v)=>s+(Number(v)||0),0);
+    budgetEl.textContent=money(totalBudget);
+  }
+}
+
+
+function esc(v){
+  return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+function showIncomeForm(index=-1){
+  const x=index>=0 ? inc[index] : ['', '', 'Mensual', monthKey()];
+  const host=document.getElementById('incomeFormHost');
+  if(!host)return;
+  host.innerHTML=`<div class="edit-form">
+    <div class="form-grid">
+      <div class="field full"><label>Concepto</label><input id="ifConcept" value="${esc(x[0])}" placeholder="Ej. Nómina"></div>
+      <div class="field"><label>Importe (€)</label><input id="ifAmount" type="number" step="0.01" inputmode="decimal" value="${esc(x[1])}"></div>
+      <div class="field"><label>Periodicidad</label><select id="ifFreq">
+        ${['Mensual','Trimestral','Semestral','Anual','Una vez'].map(v=>`<option ${x[2]===v?'selected':''}>${v}</option>`).join('')}
+      </select></div>
+      <div class="field full"><label>Mes de inicio</label><input id="ifStart" type="month" value="${esc(x[3]&&x[3]!=='Todos'?x[3]:monthKey())}"></div>
+    </div>
+    <div class="form-actions">
+      <button onclick="saveIncome(${index})">Guardar</button>
+      <button class="secondary" onclick="closeIncomeForm()">Cancelar</button>
+    </div>
+  </div>`;
+}
+function closeIncomeForm(){const h=document.getElementById('incomeFormHost');if(h)h.innerHTML='';}
+function saveIncome(index){
+  const concept=document.getElementById('ifConcept').value.trim();
+  const amount=Number(document.getElementById('ifAmount').value);
+  const freq=document.getElementById('ifFreq').value;
+  const start=document.getElementById('ifStart').value;
+  if(!concept || !(amount>0)){alert('Indica un concepto y un importe válido.');return;}
+  const row=[concept,amount,freq,start||monthKey()];
+  if(index>=0)inc[index]=row; else inc.push(row);
+  localStorage.setItem('inc',JSON.stringify(inc));
+  closeIncomeForm();render();
+}
+function deleteIncome(i){
+  if(confirm('¿Eliminar este ingreso?')){inc.splice(i,1);localStorage.setItem('inc',JSON.stringify(inc));render();}
+}
+
+function showRecurringForm(index=-1){
+  const x=index>=0 ? r[index] : ['', '', 'Mensual', monthKey()];
+  const host=document.getElementById('recFormHost');
+  if(!host)return;
+  host.innerHTML=`<div class="edit-form">
+    <div class="form-grid">
+      <div class="field full"><label>Concepto</label><input id="rfConcept" value="${esc(x[0])}" placeholder="Ej. Seguro coche"></div>
+      <div class="field"><label>Importe (€)</label><input id="rfAmount" type="number" step="0.01" inputmode="decimal" value="${esc(x[1])}"></div>
+      <div class="field"><label>Periodicidad</label><select id="rfFreq">
+        ${['Mensual','Trimestral','Semestral','Anual'].map(v=>`<option ${x[2]===v?'selected':''}>${v}</option>`).join('')}
+      </select></div>
+      <div class="field full"><label>Mes de pago</label><input id="rfStart" type="month" value="${esc(x[3]&&x[3]!=='Todos'?x[3]:monthKey())}"></div>
+    </div>
+    <div class="form-actions">
+      <button onclick="saveRecurring(${index})">Guardar</button>
+      <button class="secondary" onclick="closeRecurringForm()">Cancelar</button>
+    </div>
+  </div>`;
+}
+function closeRecurringForm(){const h=document.getElementById('recFormHost');if(h)h.innerHTML='';}
+function saveRecurring(index){
+  const concept=document.getElementById('rfConcept').value.trim();
+  const amount=Number(document.getElementById('rfAmount').value);
+  const freq=document.getElementById('rfFreq').value;
+  const start=document.getElementById('rfStart').value;
+  if(!concept || !(amount>0)){alert('Indica un concepto y un importe válido.');return;}
+  const row=[concept,amount,freq,start||monthKey()];
+  if(index>=0)r[index]=row; else r.push(row);
+  localStorage.setItem('r',JSON.stringify(r));
+  closeRecurringForm();render();
+}
+
+function currentBudgetTotal(){
+  return Object.values(typeof budgets!=='undefined'?budgets:{}).reduce((s,v)=>s+(Number(v)||0),0);
+}
+function renderDynamicBudget(){
+  const el=document.getElementById('budgetDynamic');
+  if(!el)return;
+  const income=monthlyIncomeTotal(), expenses=monthlyMovementExpenseTotal()+monthlyRecurringExpenseTotal();
+  const budget=currentBudgetTotal();
+  const used=budget?expenses/budget*100:0;
+  el.innerHTML=`<div class="card"><h3>Resumen mensual</h3>
+    <p>Ingresos: <b>${money(income)}</b></p>
+    <p>Gastos: <b>${money(expenses)}</b></p>
+    <p>Presupuesto total: <b>${money(budget)}</b></p>
+    <p>Uso del presupuesto: <b>${used.toLocaleString('es-ES',{maximumFractionDigits:1})}%</b></p>
+  </div>`;
+}
+function renderDynamicCharts(){
+  const el=document.getElementById('chartDynamic');
+  if(!el)return;
+  const t=totalsForMonth(selectedMonth);
+  const available=Math.max(0,t.available);
+  const categories={};
+  (m||[]).forEach(x=>{
+    if(monthMatches(x[3],selectedMonth)){
+      const cat=x[1]||'Otros';
+      categories[cat]=(categories[cat]||0)+(Number(x[2])||0);
+    }
+  });
+  if(available>0) categories['Disponible']=available;
+
+  const rows=Object.entries(categories).sort((a,b)=>b[1]-a[1]);
+  const total=Math.max(available, ...rows.map(x=>x[1]), 1);
+
+  el.innerHTML=`<div class="card"><h3>Categorías</h3>
+    <div class="small" style="margin-bottom:12px">${selectedMonthLabel()}</div>
+    ${rows.length ? rows.map(([cat,val])=>`
+      <div style="margin:10px 0">
+        <div style="display:flex;justify-content:space-between;gap:10px">
+          <b>${esc(cat)}</b><span>${money(val)}</span>
+        </div>
+        <div style="height:14px;background:#e9edf2;border-radius:10px;overflow:hidden;margin-top:5px">
+          <div style="height:100%;width:${Math.min(100,val/total*100)}%;background:${cat==='Disponible'?'#aaa':'#777'}"></div>
+        </div>
+      </div>`).join('') : '<div class="empty-state">No hay movimientos para este mes.</div>'}
+  </div>`;
+}
+
+/* ===== Mi Economía v2: fechas, meses e histórico ===== */
+let selectedMonth = localStorage.getItem('selectedMonth') || new Date().toISOString().slice(0,7);
+
+function fmtMonth(key){
+  if(!key) return '';
+  const [y,m]=key.split('-');
+  return new Date(Number(y),Number(m)-1,1).toLocaleDateString('es-ES',{month:'long',year:'numeric'});
+}
+function monthOffset(key, delta){
+  const [y,m]=key.split('-').map(Number);
+  const d=new Date(y,m-1+delta,1);
+  return d.toISOString().slice(0,7);
+}
+function monthMatches(date,key){
+  return !!date && date.slice(0,7)===key;
+}
+function ensureMovementDates(){
+  let changed=false;
+  m=(m||[]).map(x=>{
+    if(!x[3]){
+      changed=true;
+      return [x[0],x[1],x[2],selectedMonth+'-01'];
+    }
+    return x;
+  });
+  if(changed)localStorage.setItem('m',JSON.stringify(m));
+}
+function movementTotalForMonth(key){
+  return (m||[]).reduce((sum,x)=>{
+    const amount=Number(x[2])||0;
+    return sum+(monthMatches(x[3],key)?amount:0);
+  },0);
+}
+function incomeOccurs(x,key){
+  const amount=Number(x[1])||0, freq=x[2], start=x[3]||'';
+  if(!amount)return 0;
+  if(freq==='Mensual'){
+    if(!start || start==='Todos') return amount;
+    return key>=start ? amount : 0;
+  }
+  if(freq==='Trimestral'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    const [sy,sm]=start.split('-').map(Number),[ky,km]=key.split('-').map(Number);
+    const diff=(ky-sy)*12+(km-sm);
+    return diff%3===0?amount:0;
+  }
+  if(freq==='Semestral'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    const [sy,sm]=start.split('-').map(Number),[ky,km]=key.split('-').map(Number);
+    const diff=(ky-sy)*12+(km-sm);
+    return diff%6===0?amount:0;
+  }
+  if(freq==='Anual'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    return key.slice(5,7)===start.slice(5,7)?amount:0;
+  }
+  if(freq==='Una vez') return key===start?amount:0;
+  return 0;
+}
+function recurringOccurs(x,key){
+  const amount=Number(x[1])||0, freq=x[2], start=x[3]||'';
+  if(!amount)return 0;
+  if(freq==='Mensual'){
+    if(!start || start==='Todos')return amount;
+    return key>=start?amount:0;
+  }
+  if(freq==='Trimestral'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    const [sy,sm]=start.split('-').map(Number),[ky,km]=key.split('-').map(Number);
+    return ((ky-sy)*12+(km-sm))%3===0?amount:0;
+  }
+  if(freq==='Semestral'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    const [sy,sm]=start.split('-').map(Number),[ky,km]=key.split('-').map(Number);
+    return ((ky-sy)*12+(km-sm))%6===0?amount:0;
+  }
+  if(freq==='Anual'){
+    if(!start || start==='Todos')return amount;
+    if(key<start)return 0;
+    return key.slice(5,7)===start.slice(5,7)?amount:0;
+  }
+  return 0;
+}
+function incomeTotalForMonth(key){
+  return (inc||[]).reduce((s,x)=>s+incomeOccurs(x,key),0);
+}
+function recurringTotalForMonth(key){
+  return (r||[]).reduce((s,x)=>s+recurringOccurs(x,key),0);
+}
+function totalsForMonth(key){
+  const income=incomeTotalForMonth(key);
+  const movements=movementTotalForMonth(key);
+  const recurring=recurringTotalForMonth(key);
+  return {income, movements, recurring, expenses:movements+recurring, available:income-movements-recurring};
+}
+function buildMonthBar(){
+  const nav=document.querySelector('.monthbar');
+  if(nav)return;
+  const firstScreen=document.getElementById('inicio');
+  if(!firstScreen)return;
+  const h=firstScreen.querySelector('h2');
+  if(!h)return;
+  const wrap=document.createElement('div');
+  wrap.className='monthbar';
+  wrap.innerHTML=`<button onclick="changeMonth(-1)" aria-label="Mes anterior">‹</button>
+    <select id="monthSelector" onchange="setSelectedMonth(this.value)"></select>
+    <button onclick="changeMonth(1)" aria-label="Mes siguiente">›</button>`;
+  h.insertAdjacentElement('afterend',wrap);
+  updateMonthSelector();
+}
+function updateMonthSelector(){
+  const s=document.getElementById('monthSelector');
+  if(!s)return;
+  let opts='';
+  for(let i=-12;i<=12;i++){
+    const k=monthOffset(selectedMonth,i);
+    opts+=`<option value="${k}" ${k===selectedMonth?'selected':''}>${fmtMonth(k)}</option>`;
+  }
+  s.innerHTML=opts;
+}
+function setSelectedMonth(k){
+  selectedMonth=k;
+  localStorage.setItem('selectedMonth',k);
+  render();
+}
+function changeMonth(delta){
+  selectedMonth=monthOffset(selectedMonth,delta);
+  localStorage.setItem('selectedMonth',selectedMonth);
+  render();
+}
+function selectedMonthLabel(){
+  return fmtMonth(selectedMonth);
+}
+function saveMovementV2(){
+  const c=document.getElementById('mfConcept')?.value.trim();
+  const cat=document.getElementById('mfCategory')?.value.trim()||'Otros';
+  const a=Number(document.getElementById('mfAmount')?.value);
+  const d=document.getElementById('mfDate')?.value;
+  if(!c||!(a>0)||!d){alert('Completa concepto, importe y fecha.');return;}
+  m.push([c,cat,a,d]);
+  localStorage.setItem('m',JSON.stringify(m));
+  closeMovementFormV2();render();
+}
+function showMovementFormV2(){
+  const host=document.getElementById('movementFormHost');
+  if(!host)return;
+  host.innerHTML=`<div class="edit-form">
+    <div class="form-grid">
+      <div class="field full"><label>Concepto</label><input id="mfConcept" placeholder="Ej. Supermercado"></div>
+      <div class="field"><label>Categoría</label><input id="mfCategory" placeholder="Alimentación"></div>
+      <div class="field"><label>Importe (€)</label><input id="mfAmount" type="number" step="0.01" inputmode="decimal"></div>
+      <div class="field full"><label>Fecha</label><input id="mfDate" class="date-input" type="date" value="${selectedMonth}-01"></div>
+    </div>
+    <div class="form-actions"><button onclick="saveMovementV2()">Guardar</button><button class="secondary" onclick="closeMovementFormV2()">Cancelar</button></div>
+  </div>`;
+}
+function closeMovementFormV2(){const h=document.getElementById('movementFormHost');if(h)h.innerHTML='';}
+function editMovementV2(i){
+  const x=m[i],host=document.getElementById('movementFormHost');
+  if(!host)return;
+  host.innerHTML=`<div class="edit-form">
+    <div class="form-grid">
+      <div class="field full"><label>Concepto</label><input id="mfConcept" value="${esc(x[0])}"></div>
+      <div class="field"><label>Categoría</label><input id="mfCategory" value="${esc(x[1])}"></div>
+      <div class="field"><label>Importe (€)</label><input id="mfAmount" type="number" step="0.01" value="${esc(x[2])}"></div>
+      <div class="field full"><label>Fecha</label><input id="mfDate" class="date-input" type="date" value="${esc(x[3]||selectedMonth+'-01')}"></div>
+    </div>
+    <div class="form-actions"><button onclick="updateMovementV2(${i})">Guardar cambios</button><button class="secondary" onclick="closeMovementFormV2()">Cancelar</button></div>
+  </div>`;
+}
+function updateMovementV2(i){
+  const c=document.getElementById('mfConcept').value.trim(),cat=document.getElementById('mfCategory').value.trim()||'Otros';
+  const a=Number(document.getElementById('mfAmount').value),d=document.getElementById('mfDate').value;
+  if(!c||!(a>0)||!d){alert('Completa todos los campos.');return;}
+  m[i]=[c,cat,a,d];localStorage.setItem('m',JSON.stringify(m));closeMovementFormV2();render();
+}
+function deleteMovementV2(i){
+  if(confirm('¿Eliminar este movimiento?')){m.splice(i,1);localStorage.setItem('m',JSON.stringify(m));render();}
+}
+function patchHomeV2(){
+  const t=totalsForMonth(selectedMonth);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('homeIncome',money(t.income)); set('homeExpense',money(t.expenses)); set('homeAvailable',money(t.available));
+  set('homeFreePercent',(t.income?((t.available/t.income)*100).toLocaleString('es-ES',{maximumFractionDigits:1}):'0')+'%');
+}
+function renderHistoryV2(){
+  const host=document.getElementById('monthHistory');
+  if(!host)return;
+  let rows='';
+  for(let i=-5;i<=5;i++){
+    const k=monthOffset(selectedMonth,i),t=totalsForMonth(k);
+    rows+=`<div class="history-row"><div><b>${fmtMonth(k)}</b><div class="small">Ingresos ${money(t.income)} · Gastos ${money(t.expenses)}</div></div><b>${money(t.available)}</b></div>`;
+  }
+  host.innerHTML=rows;
+}
+
+function monthlyIncomeTotal(){return incomeTotalForMonth(selectedMonth);}
+function monthlyRecurringExpenseTotal(){return recurringTotalForMonth(selectedMonth);}
+function monthlyMovementExpenseTotal(){return movementTotalForMonth(selectedMonth);}
+
+
+function saveCategories(){localStorage.setItem('categories',JSON.stringify(categories));}
+function renderCategorySelect(){
+ const s=document.getElementById('c'); if(!s)return;
+ const current=s.value;
+ s.innerHTML=categories.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+ if(categories.includes(current))s.value=current;
+}
+function renderCategoryManager(){
+ const host=document.getElementById('categoryManager'); if(!host)return;
+ host.innerHTML=`
+ <div style="margin-bottom:12px;color:#8e8e93;font-size:13px">
+ Las categorías eliminadas no aparecerán en nuevos movimientos. Los movimientos antiguos conservan su categoría.
+ </div>
+ ${categories.map((cat,i)=>`<div class="row">
+   <span>${esc(cat)}</span>
+   <span style="display:flex;gap:6px">
+    <button onclick="renameCategory(${i})" style="border:0;background:#f2f2f7;border-radius:10px;padding:7px 10px;color:#007aff">Editar</button>
+    <button onclick="deleteCategory(${i})" style="border:0;background:#fff0ef;border-radius:10px;padding:7px 10px;color:#ff3b30">Eliminar</button>
+   </span>
+ </div>`).join('')}
+ <div style="display:flex;gap:8px;margin-top:12px">
+  <input id="newCategory" placeholder="Nueva categoría">
+  <button onclick="addCategory()" style="border:0;border-radius:13px;background:#007aff;color:white;padding:0 15px;font-weight:700">Añadir</button>
+ </div>`;
+}
+function addCategory(){
+ const input=document.getElementById('newCategory'),name=(input?.value||'').trim();
+ if(!name)return;
+ if(categories.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Esa categoría ya existe.');return;}
+ categories.push(name);saveCategories();renderCategorySelect();renderCategoryManager();
+}
+function renameCategory(i){
+ const old=categories[i],name=prompt('Nuevo nombre para "'+old+'":',old);
+ if(name===null)return;
+ const n=name.trim();
+ if(!n||n===old)return;
+ if(categories.some((x,j)=>j!==i&&x.toLowerCase()===n.toLowerCase())){alert('Esa categoría ya existe.');return;}
+ m.forEach(x=>{if(x[1]===old)x[1]=n;});
+ categories[i]=n;save();renderCategorySelect();renderCategoryManager();render();
+}
+function deleteCategory(i){
+ const name=categories[i];
+ if(!confirm('¿Eliminar la categoría "'+name+'"?\n\nLos movimientos antiguos que ya la utilizan no se borrarán.'))return;
+ categories.splice(i,1);save();renderCategorySelect();renderCategoryManager();render();
+}
+
+function render(){renderCategorySelect();renderCategoryManager();
+  ensureMovementDates();
+  updateHomeTotals();
+  renderDynamicBudget();
+  renderDynamicCharts();
+  buildMonthBar();
+  updateMonthSelector();
+  patchHomeV2();
+  renderHistoryV2();it.innerHTML=inc.map((x,i)=>`<tr><td>${x[0]}</td><td>${x[2]}</td><td>${x[1].toFixed(2)} €</td><td><button onclick="editI(${i})">✎</button> <button onclick="delI(${i})">×</button></td></tr>`).join('');mt.innerHTML=m.map(x=>`<tr><td>${x[0]}</td><td><span class="pill">${x[1]}</span></td><td>${x[2].toFixed(2)}</td></tr>`).join('');rt.innerHTML=r.map((x,i)=>`<tr><td>${x[0]}</td><td>${x[2]}</td><td>${x[1].toFixed(2)} €</td><td><button onclick="editR(${i})">✎</button> <button onclick="delR(${i})">×</button></td></tr>`).join('');let b=[['Casa',1000,850],['Coche',500,420],['Alimentación',450,326],['Ocio/Deporte',300,210],['Impuestos',300,180]];bt.innerHTML=b.map(x=>`<div class="row"><div style="width:100%"><div class="row" style="padding:0;border:0"><span>${x[0]}</span><b>${x[2]} / ${x[1]} €</b></div><div class="bar"><i style="width:${Math.min(100,x[2]/x[1]*100)}%"></i></div></div></div>`).join('');draw()}
+function addI(){let d=document.getElementById('idc').value,a=parseFloat(document.getElementById('ia').value);if(!d||!a)return;inc.push([d,a,document.getElementById('ip').value,document.getElementById('if').value]);save();render();document.getElementById('idc').value='';document.getElementById('ia').value=''}
+function editI(i){let x=inc[i],d=prompt('Concepto',x[0]);if(d===null)return;let a=prompt('Importe (€)',x[1]);if(a===null)return;inc[i][0]=d;inc[i][1]=parseFloat(a)||x[1];save();render()}
+function delI(i){if(confirm('¿Eliminar este ingreso?')){inc.splice(i,1);save();render()}}
+function add(){let d=document.getElementById('d').value,a=parseFloat(document.getElementById('a').value),c=document.getElementById('c').value;if(!d||!a)return;m.unshift([d,c,document.getElementById('t').value==='Gasto'?a:-a]);save();render();d='';document.getElementById('d').value='';document.getElementById('a').value=''}
+function editR(i){let x=r[i],d=prompt('Concepto',x[0]);if(d===null)return;let a=prompt('Importe (€)',x[1]);if(a===null)return;r[i][0]=d;r[i][1]=parseFloat(a)||x[1];save();render()}
+function delR(i){if(confirm('¿Eliminar este gasto recurrente?')){r.splice(i,1);save();render()}}
+function addR(){let d=document.getElementById('rd').value,a=parseFloat(document.getElementById('ra').value);if(!d||!a)return;r.push([d,a,document.getElementById('rp').value,document.getElementById('rm').value]);save();render();document.getElementById('rd').value='';document.getElementById('ra').value=''}
+function go(id,b){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');scrollTo(0,0)}
+function draw(){let c=document.getElementById('chart'),x=c.getContext('2d'),v=[820,970,760,1120,1080,1264],lab=['Abr','May','Jun','Jul','Ago','Sep'];x.clearRect(0,0,c.width,c.height);x.strokeStyle='#1769e0';x.lineWidth=5;x.beginPath();v.forEach((n,i)=>{let px=45+i*122,py=260-n/1400*220;i?x.lineTo(px,py):x.moveTo(px,py);x.fillStyle='#555';x.fillText(lab[i],px-10,285);x.fillText(n+' €',px-18,py-12)});x.stroke();x.fillStyle='#1769e0';v.forEach((n,i)=>{let px=45+i*122,py=260-n/1400*220;x.beginPath();x.arc(px,py,6,0,7);x.fill()})}render();
+</script><div class="ios-hint">En iPhone: Safari → Compartir → <b>Añadir a pantalla de inicio</b>.</div></body></html>
+<script>try{localStorage.setItem('miEconomiaVersion','2.0');}catch(e){}</script>
